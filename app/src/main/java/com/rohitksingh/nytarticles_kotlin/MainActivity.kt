@@ -3,12 +3,13 @@ package com.rohitksingh.nytarticles_kotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var decrementButton : Button
     lateinit var counterTextView: TextView
     var counter = 0
+    var timerValue = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +34,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         decrementButton.setOnClickListener(this)
 
+        runTimer()
+//
+//        CoroutineScope(IO).launch {
+//            repeat(10) {
+//                delay(1000)
+//                var value = runTimer()
+//                setTextView(value)
+//            }
+//        }
 
     }
 
-    fun openActivity(counterValue: String){
+    private fun openActivity(counterValue: String){
         var intent = Intent(this, DetailActivity:: class.java)
         intent.putExtra("COUNTER_VALUE", counterValue)
         startActivity(intent)
@@ -45,12 +56,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         openActivity(" "+counter)
     }
 
-    suspend fun runTimer() = coroutineScope {
-        launch {
-            delay(3000)
-            counterTextView.setText("This is timer")
+
+    private fun runTimer(){
+
+        CoroutineScope(IO).launch {
+
+            repeat(10){
+                delay(1000)
+                setTextView("Timer Value ${--timerValue}")
+            }
+
         }
-        println("Hello")
+
     }
+
+    private suspend fun setTextView(apiResponse: String){
+        withContext(Main){
+            counterTextView.setText(apiResponse)
+        }
+    }
+
 
 }
