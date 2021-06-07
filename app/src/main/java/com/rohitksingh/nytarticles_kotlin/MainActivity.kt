@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         decrementButton.setOnClickListener(this)
 
+
     }
 
     fun openActivity(counterValue: String){
@@ -39,6 +43,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         openActivity(" "+counter)
+    }
+
+    suspend fun runTimer() = coroutineScope {
+        launch {
+            delay(3000)
+            counterTextView.setText("This is timer")
+        }
+        println("Hello")
     }
 
 }
