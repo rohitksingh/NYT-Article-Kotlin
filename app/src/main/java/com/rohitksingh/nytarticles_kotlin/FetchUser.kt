@@ -6,27 +6,41 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlin.coroutines.CoroutineContext
 
 
 /**
  *  This class Mocks fetching User from a Network call and Update on UI
  */
-class FetchUser : AppCompatActivity() {
+class FetchUser() : AppCompatActivity(), CoroutineScope {
 
-    lateinit var userTextView : TextView
+    private lateinit var userTextView : TextView
+
+    private lateinit var job: Job
+
+    override val coroutineContext: CoroutineContext
+        get() = Main + job
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main);
-
+        job = Job()
         userTextView = findViewById(R.id.counter)
 
-        CoroutineScope(IO)
-            .launch {
+        launch {
                 fetchAndShowUserDetail()
-            }
+        }
 
     }
+
+    /**
+     * For canceling the Job
+     */
+    override fun onDestroy() {
+        job.cancel()
+        super.onDestroy()
+    }
+
 
     /**
      *  This looks async function but it is not
@@ -49,10 +63,25 @@ class FetchUser : AppCompatActivity() {
      *  What is GlobalScope? async? await?
      */
     private suspend fun fetchUser() : User{
+
         return GlobalScope.async(IO) {
             delay(3000)
             User("Rohit", "r4rohit002@gmail.com")
         }.await()
+
+
+        //This runs in parallel
+
+//        return GlobalScope.async(IO) {
+//            delay(3000)
+//            User("Rohit", "r4rohit002@gmail.com")
+//        }.await()
+
+        // This runs in series
+//        return withContext(IO) {
+//            delay(3000)
+//            User("Rohit", "r4rohit002@gmail.com")
+//        }
     }
 
 
