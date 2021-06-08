@@ -34,20 +34,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         decrementButton.setOnClickListener(this)
 
-        runTimer()
-//
-//        CoroutineScope(IO).launch {
-//            repeat(10) {
-//                delay(1000)
-//                var value = runTimer()
-//                setTextView(value)
-//            }
-//        }
+        CoroutineScope(IO)
+            .launch {
+                fetchresultFromAPI()
+            }
+
+        //fetchresultFromAPI()
+
 
     }
 
     private fun openActivity(counterValue: String){
-        var intent = Intent(this, DetailActivity:: class.java)
+        var intent = Intent(this, FetchUser:: class.java)
         intent.putExtra("COUNTER_VALUE", counterValue)
         startActivity(intent)
     }
@@ -57,17 +55,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    private fun runTimer(){
+    private suspend fun fetchresultFromAPI(){
+        val apiResponse = networkCall()
+        show(apiResponse)
+    }
 
-        CoroutineScope(IO).launch {
 
-            repeat(10){
-                delay(1000)
-                setTextView("Timer Value ${--timerValue}")
-            }
+    private suspend fun networkCall() : String{
+        delay(3000)
+        return "This is response from API"
+    }
 
+    private suspend fun show(apiResponse: String){
+        withContext(Main){
+            counterTextView.setText(apiResponse)
         }
-
     }
 
     private suspend fun setTextView(apiResponse: String){
