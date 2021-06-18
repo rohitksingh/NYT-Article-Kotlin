@@ -1,12 +1,12 @@
-package com.rohitksingh.nytarticles_kotlin
+package com.rohitksingh.nytarticles_kotlin.extra
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import com.rohitksingh.nytarticles_kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main

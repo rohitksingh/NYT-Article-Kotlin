@@ -1,8 +1,9 @@
-package com.rohitksingh.nytarticles_kotlin
+package com.rohitksingh.nytarticles_kotlin.extra
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.rohitksingh.nytarticles_kotlin.R
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -62,7 +63,7 @@ class FetchUser() : AppCompatActivity(), CoroutineScope {
      *
      *  What is GlobalScope? async? await?
      */
-    private suspend fun fetchUser() : User{
+    private suspend fun fetchUser() : User {
 
         return GlobalScope.async(IO) {
             delay(3000)
